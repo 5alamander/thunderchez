@@ -195,7 +195,12 @@
  (import (ffi-utils) (chezscheme))
  
  (define (nanomsg-library-init . t)
-   (load-shared-object (if (null? t) "libnanomsg.so" (car t))))
+   (load-shared-object (if (null? t)
+                           (case (machine-type)
+                             [(i3le ti3le) "libnanomsg.so.6"]
+                             [(a6osx i3osx ti3osx) "libnanomsg.dylib"]
+                             [else "libnanomsg.so"])
+                           (car t))))
 
  (define-syntax define-nn-func
    (lambda (x)
